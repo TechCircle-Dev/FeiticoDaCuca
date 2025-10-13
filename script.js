@@ -10,7 +10,7 @@ const collectibleItems = [
 const collectedCounts = {};
 
 let isJumping = false;
-let gravity = 0.9;
+let gravity = 0.6;
 let position = 0;
 
 // Movimento de pulo
@@ -19,7 +19,7 @@ function jump() {
     isJumping = true;
 
     let upInterval = setInterval(() => {
-        if (position >= 150) {
+        if (position >= 180) {
             clearInterval(upInterval);
 
             // Queda
@@ -31,18 +31,18 @@ function jump() {
                     position -= 5;
                     dino.style.bottom = position + "px";
                 }
-            }, 10);
+            }, 7);
         } else {
             position += 5;
             dino.style.bottom = position + "px";
         }
-    }, 10);
+    }, 7);
 }
 
 // Animação do cacto
 function moveCactus() {
     let cactusPosition = 600;
-    let speed = 15; // Começa com 15ms
+    let speed = 10; // Começa com 15ms
     let timerId;
 
     function updateCactus() {
@@ -51,7 +51,7 @@ function moveCactus() {
         cactus.style.left = cactusPosition + "px";
 
         // Colisão com o dinossauro
-        if (cactusPosition > 50 && cactusPosition < 90 && position < 40) {
+      if (cactusPosition > 10 && cactusPosition < 130 && position < 40) {
             clearTimeout(timerId);
             document.body.innerHTML = "<h1 style='text-align:center;'>Game Over</h1>";
             return;
@@ -63,7 +63,7 @@ function moveCactus() {
         }
 
         // Reduz a velocidade gradualmente (acelera o jogo)
-        if (speed > 8) {
+        if (speed > 6) {
             speed -= 0.1;
         }
 
@@ -97,7 +97,7 @@ function spawnCollectible() {
 
     let collectiblePosition = Math.floor(Math.random() * 300) + 600;
     collectible.style.left = collectiblePosition + "px";
-    collectible.style.bottom = "100px";
+    collectible.style.bottom = "200px";
     collectible.style.position = "absolute";
     collectible.style.width = "100px";
     collectible.style.height = "100px";
