@@ -1,3 +1,4 @@
+
 body {
   margin: 0;
   padding: 0;
@@ -12,7 +13,7 @@ body {
 .game {
   width: 700px;
   height: 350px;
-  background-color: red;
+  background-color: #f4f4f4;
   border-bottom: 2px solid #000;
   position: relative;
   overflow: hidden;
@@ -28,6 +29,17 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: bottom;
+  position: absolute; 
+}
+
+#foot {
+  position: absolute;
+  bottom: -29px; /* ajusta para ficar no lugar certo */
+  left: 20px; /* ajuste fino pra alinhar */
+  width: 160px;
+  height: 150px;
+  transform-origin: center bottom;
+  transition: transform 0.2s ease-in-out;
 }
 
 #cactus {

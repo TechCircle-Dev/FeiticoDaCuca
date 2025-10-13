@@ -18,9 +18,14 @@ function jump() {
     if (isJumping) return;
     isJumping = true;
 
+    const foot = document.getElementById("foot");
+    foot.style.transform = "rotate(15deg)"; // levanta o pé
+
     let upInterval = setInterval(() => {
         if (position >= 180) {
             clearInterval(upInterval);
+
+            foot.style.transform = "rotate(0deg)"; // pé volta ao normal no topo do pulo
 
             // Queda
             let downInterval = setInterval(() => {
@@ -38,6 +43,7 @@ function jump() {
         }
     }, 7);
 }
+
 
 // Animação do cacto
 function moveCactus() {
@@ -192,5 +198,16 @@ function updateInventory() {
     }
 }
 
+function animateFoot() {
+  const foot = document.getElementById("dino-foot");
+  
+  // levanta o pé (rotaciona pra trás)
+  foot.style.transform = "rotate(-30deg)";
+  
+  // volta o pé depois de 300ms
+  setTimeout(() => {
+    foot.style.transform = "rotate(0deg)";
+  }, 300);
+}
 
 setInterval(spawnCollectible, 3000);
