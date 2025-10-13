@@ -1,0 +1,57 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: sans-serif;
+}
+
+.game {
+  width: 700px;
+  height: 250px;
+  background-color: #f4f4f4;
+  border-bottom: 2px solid #000;
+  position: relative;
+  overflow: hidden;
+}
+
+#dino {
+  width: 180px;
+  height: 210px;
+  position: absolute;
+  bottom: 0;
+  left: 50px;
+  background-image: url('./img/cuca_sem_pe.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
+#cactus {
+  width: 250px;
+  height: 250px;
+  position: absolute;
+  bottom: -90px;
+  left: 600px;
+  z-index: 100000000px;
+}
+
+/* Quadrados coloridos */
+.collectible {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+}
+
+/* Inventário no canto superior direito */
+#inventory {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 5px;
+}
+
