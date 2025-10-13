@@ -2,11 +2,12 @@ const dino = document.getElementById("dino");
 const cactus = document.getElementById("cactus");
 const inventory = document.getElementById("inventory");
 const collectibleItems = [
-  { name: "olho", src: "./img/olho.png" },
-  { name: "lavanda", src: "./img/lavanda.png" },
-  { name: "anis", src: "./img/anis.png" }
+    { name: "olho", src: "./img/olho.png" },
+    { name: "lavanda", src: "./img/lavanda.png" },
+    { name: "anis", src: "./img/anis.png" }
 ];
-const collectedTypes = new Set();
+
+const collectedCounts = {};
 
 let isJumping = false;
 let gravity = 0.9;
@@ -107,46 +108,42 @@ function spawnCollectible() {
     let speed = 20;
     let timerId;
 
-function moveCollectible() {
-    collectiblePosition -= 5;
-    collectible.style.left = collectiblePosition + "px";
+    function moveCollectible() {
+        collectiblePosition -= 5;
+        collectible.style.left = collectiblePosition + "px";
 
-    // Posições relativas ao container (mesmo contexto)
-    const dinoLeft = dino.offsetLeft;
-    const dinoRight = dinoLeft + dino.offsetWidth;
-    const collectibleLeft = collectiblePosition;
-    const collectibleRight = collectibleLeft + collectible.offsetWidth;
+        // Posições relativas ao container (mesmo contexto)
+        const dinoLeft = dino.offsetLeft;
+        const dinoRight = dinoLeft + dino.offsetWidth;
+        const collectibleLeft = collectiblePosition;
+        const collectibleRight = collectibleLeft + collectible.offsetWidth;
 
-    // Condições para coletar
-    if (
-        isJumping &&
-        position >= 140 && position <= 160 && // altura do pulo perto do topo
-        collectibleRight > dinoLeft + 40 && // coletável mais próximo do meio do dino (ajuste)
-        collectibleLeft < dinoRight - 40
-    ) {
-        clearTimeout(timerId);
-        collectible.remove();
+        // Condições para coletar
+        if (
+            isJumping &&
+            position >= 140 && position <= 160 && // altura do pulo perto do topo
+            collectibleRight > dinoLeft + 40 && // coletável mais próximo do meio do dino (ajuste)
+            collectibleLeft < dinoRight - 40
+        ) {
+            clearTimeout(timerId);
+            collectible.remove();
 
-        // Adiciona ao inventário
-        const inventoryItem = document.createElement("img");
-        inventoryItem.src = itemData.src;
-        inventoryItem.style.width = "100px";
-        inventoryItem.style.height = "100px";
-        inventory.appendChild(inventoryItem);
+            // Adiciona ao inventário
+            collectedCounts[itemData.name] = (collectedCounts[itemData.name] || 0) + 1;
 
-        // Marca como coletado
-        collectedTypes.add(itemData.name);
+            // Atualiza o inventário
+            updateInventory();
 
-        // Verifica vitória
-        if (collectedTypes.size === collectibleItems.length) {
-            document.body.innerHTML = "<h1 style='text-align:center;'>PARABÉNS, VOCÊ GANHOU!</h1>";
+            const uniqueCollectedCount = Object.keys(collectedCounts).length;
+            if (uniqueCollectedCount === collectibleItems.length) {
+                document.body.innerHTML = "<h1 style='text-align:center;'>PARABÉNS, VOCÊ GANHOU!</h1>";
+            }
+
+            return;
         }
 
-        return;
+        timerId = setTimeout(moveCollectible, speed);
     }
-
-    timerId = setTimeout(moveCollectible, speed);
-}
 
 
     moveCollectible();
@@ -156,6 +153,43 @@ function moveCollectible() {
         clearTimeout(timerId);
         if (collectible.parentNode) collectible.remove();
     }, 5000);
+}
+
+function updateInventory() {
+    inventory.innerHTML = ""; // limpa inventário
+
+    for (const itemName in collectedCounts) {
+        const count = collectedCounts[itemName];
+        if (count > 0) {
+            // Procura os dados do item (src)
+            const itemData = collectibleItems.find(item => item.name === itemName);
+
+            // Cria um container pra imagem + contador
+            const container = document.createElement("div");
+            container.style.position = "relative";
+            container.style.display = "inline-block";
+
+            const img = document.createElement("img");
+            img.src = itemData.src;
+            img.style.width = "100px";
+            img.style.height = "100px";
+
+            const countBadge = document.createElement("span");
+            countBadge.textContent = "x" + count;
+            countBadge.style.position = "absolute";
+            countBadge.style.bottom = "0";
+            countBadge.style.right = "33px";
+            countBadge.style.color = "black";
+            countBadge.style.fontSize = "20px";
+            countBadge.style.padding = "2px 6px";
+            countBadge.style.borderRadius = "10px";
+
+            container.appendChild(img);
+            container.appendChild(countBadge);
+
+            inventory.appendChild(container);
+        }
+    }
 }
 
 
