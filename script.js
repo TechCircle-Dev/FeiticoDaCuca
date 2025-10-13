@@ -7,6 +7,7 @@ const collectibleItems = [
     { name: "anis", src: "./img/anis.png" }
 ];
 
+
 const collectedCounts = {};
 
 let isJumping = false;
