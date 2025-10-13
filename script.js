@@ -2,17 +2,17 @@ const dino = document.getElementById("dino");
 const cactus = document.getElementById("cactus");
 const inventory = document.getElementById("inventory");
 const collectibleItems = [
-    { name: "olho", src: "./img/olho.png" },
-    { name: "lavanda", src: "./img/lavanda.png" },
-    { name: "anis", src: "./img/anis.png" }
+    { name: "olho", src: "./img/olho.png" }, // Verifique este caminho
+    { name: "lavanda", src: "./img/lavanda.png" }, // Verifique este caminho
+    { name: "anis", src: "./img/anis.png" } // Verifique este caminho
 ];
-
 
 const collectedCounts = {};
 
 let isJumping = false;
-let gravity = 0.6;
-let position = 0;
+let position = 0; // Posição vertical do dino (bottom CSS)
+let gameLoopId; // ID para o loop principal do jogo (colisão do cacto)
+let runAnimationId; // ID para o loop da animação de corrida
 
 // Movimento de pulo
 function jump() {
@@ -20,13 +20,15 @@ function jump() {
     isJumping = true;
 
     const foot = document.getElementById("foot");
-    foot.style.transform = "rotate(15deg)"; // levanta o pé
+    // Animação de pulo: pé levanta
+    foot.style.transform = "rotate(15deg)"; 
 
     let upInterval = setInterval(() => {
-        if (position >= 180) {
+        if (position >= 180) { // Altura máxima do pulo
             clearInterval(upInterval);
 
-            foot.style.transform = "rotate(0deg)"; // pé volta ao normal no topo do pulo
+            // Pé volta ao normal no topo do pulo
+            foot.style.transform = "rotate(0deg)"; 
 
             // Queda
             let downInterval = setInterval(() => {
@@ -37,20 +39,40 @@ function jump() {
                     position -= 5;
                     dino.style.bottom = position + "px";
                 }
-            }, 7);
+            }, 8);
         } else {
             position += 5;
             dino.style.bottom = position + "px";
         }
-    }, 7);
+    }, 8);
 }
 
 
-// Animação do cacto
+// Animação de corrida (Simula o movimento fixo)
+function runAnimation() {
+    const foot = document.getElementById("foot");
+
+    function step() {
+        if (!isJumping) {
+            // Alterna a rotação do pé para simular a corrida
+            if (foot.style.transform === "rotate(8deg)") {
+                foot.style.transform = "rotate(0deg)"; // Pé no chão
+            } else {
+                foot.style.transform = "rotate(8deg)"; // Pé levantado (para trás)
+            }
+        }
+        // Repete a cada 300ms
+        runAnimationId = setTimeout(step, 300);
+    }
+    step(); // Inicia o loop da animação
+}
+
+
+// Movimento do cacto (Cria a ilusão de que o dinossauro avança)
 function moveCactus() {
     let cactusPosition = 600;
-    let speed = 10; // Começa com 15ms
-    let timerId;
+    let speed = 10; 
+    let speedAdjustment = 0; // Acumulador para o aumento de velocidade
 
     function updateCactus() {
         // Atualiza a posição do cacto
@@ -58,42 +80,53 @@ function moveCactus() {
         cactus.style.left = cactusPosition + "px";
 
         // Colisão com o dinossauro
-      if (cactusPosition > 10 && cactusPosition < 130 && position < 40) {
-            clearTimeout(timerId);
-            document.body.innerHTML = "<h1 style='text-align:center;'>Game Over</h1>";
+        // O dinossauro está entre 50px e 230px de left (50 + 180)
+        // O cacto tem 250px de largura e está 'bottom: -90px'
+        // Condição de colisão: quando o cacto estiver na frente do dino e o dino estiver no chão
+        if (cactusPosition > 10 && cactusPosition < 130 && position < 40) {
+            clearTimeout(gameLoopId);
+            clearTimeout(runAnimationId); // Para a animação de corrida
+            document.body.innerHTML = "<h1 style='text-align:center; color:white;'>Game Over</h1>";
             return;
         }
 
         // Resetar o cacto ao sair da tela
         if (cactusPosition < -20) {
-            cactusPosition = 600;
+            cactusPosition = 700; // Sai do lado direito da tela
         }
 
-        // Reduz a velocidade gradualmente (acelera o jogo)
-        if (speed > 6) {
-            speed -= 0.1;
+        // Acelera o jogo gradualmente
+        if (speedAdjustment < 400) { // Limite o aumento de velocidade para não ficar impossível muito rápido
+            speedAdjustment++;
+            // A velocidade é o tempo (ms) para a próxima iteração. Menor é mais rápido.
+            speed = Math.max(7, 10 - (speedAdjustment * 0.005)); 
         }
 
         // Repetição do movimento
-        timerId = setTimeout(updateCactus, speed);
+        gameLoopId = setTimeout(updateCactus, speed);
     }
 
     updateCactus(); // Inicia o loop de movimentação
 }
 
-// Detectar tecla espaço para pular
+// Iniciar animação do cacto e da corrida
+moveCactus();
+runAnimation(); 
+
+
+// Detecção de tecla espaço para pular
 document.addEventListener("keydown", function (event) {
     if (event.code === "Space") {
         jump();
     }
 });
 
-// Iniciar movimentação do cacto
-moveCactus();
 
-
-
+// Funções de Coleta e Inventário
 function spawnCollectible() {
+    // Se o jogo acabou, não spawna mais
+    if (document.body.innerHTML.includes("Game Over") || document.body.innerHTML.includes("PARABÉNS")) return; 
+
     const collectible = document.createElement("img");
     collectible.classList.add("collectible");
 
@@ -102,34 +135,36 @@ function spawnCollectible() {
     collectible.src = itemData.src;
     collectible.dataset.name = itemData.name;
 
-    let collectiblePosition = Math.floor(Math.random() * 300) + 600;
+    // Posição inicial fora da tela e altura fixa (para serem alcançáveis)
+    let collectiblePosition = 700;
     collectible.style.left = collectiblePosition + "px";
     collectible.style.bottom = "200px";
     collectible.style.position = "absolute";
     collectible.style.width = "100px";
     collectible.style.height = "100px";
+    collectible.style.zIndex = "15"; // Fica acima do cacto
 
     const gameArea = document.querySelector(".game");
     gameArea.appendChild(collectible);
 
-    let speed = 20;
+    let speed = 20; // Velocidade de movimento do item (pode ser ajustada)
     let timerId;
 
     function moveCollectible() {
         collectiblePosition -= 5;
         collectible.style.left = collectiblePosition + "px";
 
-        // Posições relativas ao container (mesmo contexto)
+        // Posições para detecção de colisão/coleta
         const dinoLeft = dino.offsetLeft;
         const dinoRight = dinoLeft + dino.offsetWidth;
         const collectibleLeft = collectiblePosition;
         const collectibleRight = collectibleLeft + collectible.offsetWidth;
 
-        // Condições para coletar
+        // Condição para coletar: Pulo e intersecção horizontal
         if (
             isJumping &&
-            position >= 140 && position <= 160 && // altura do pulo perto do topo
-            collectibleRight > dinoLeft + 40 && // coletável mais próximo do meio do dino (ajuste)
+            position >= 140 && // Coleta na subida ou ápice do pulo
+            collectibleRight > dinoLeft + 40 && // Margem de colisão (ajuste fino)
             collectibleLeft < dinoRight - 40
         ) {
             clearTimeout(timerId);
@@ -141,25 +176,28 @@ function spawnCollectible() {
             // Atualiza o inventário
             updateInventory();
 
+            // Checa a condição de vitória
             const uniqueCollectedCount = Object.keys(collectedCounts).length;
             if (uniqueCollectedCount === collectibleItems.length) {
-                document.body.innerHTML = "<h1 style='text-align:center;'>PARABÉNS, VOCÊ GANHOU!</h1>";
+                clearTimeout(gameLoopId); // Para o cacto
+                clearTimeout(runAnimationId); // Para a animação de corrida
+                document.body.innerHTML = "<h1 style='text-align:center; color:white;'>PARABÉNS, VOCÊ GANHOU!</h1>";
             }
 
+            return;
+        }
+        
+        // Remove se sair da tela sem ser coletado
+        if (collectiblePosition < -100) {
+            clearTimeout(timerId);
+            collectible.remove();
             return;
         }
 
         timerId = setTimeout(moveCollectible, speed);
     }
 
-
     moveCollectible();
-
-    // Remove se não for coletado em 5s
-    setTimeout(() => {
-        clearTimeout(timerId);
-        if (collectible.parentNode) collectible.remove();
-    }, 5000);
 }
 
 function updateInventory() {
@@ -186,7 +224,8 @@ function updateInventory() {
             countBadge.style.position = "absolute";
             countBadge.style.bottom = "0";
             countBadge.style.right = "33px";
-            countBadge.style.color = "black";
+            countBadge.style.color = "white"; // Cor branca para contraste com fundo escuro
+            countBadge.style.textShadow = "1px 1px 2px black"; // Sombra para legibilidade
             countBadge.style.fontSize = "20px";
             countBadge.style.padding = "2px 6px";
             countBadge.style.borderRadius = "10px";
@@ -199,16 +238,5 @@ function updateInventory() {
     }
 }
 
-function animateFoot() {
-  const foot = document.getElementById("dino-foot");
-  
-  // levanta o pé (rotaciona pra trás)
-  foot.style.transform = "rotate(-30deg)";
-  
-  // volta o pé depois de 300ms
-  setTimeout(() => {
-    foot.style.transform = "rotate(0deg)";
-  }, 300);
-}
-
+// Spawna um novo item colecionável a cada 3 segundos
 setInterval(spawnCollectible, 3000);

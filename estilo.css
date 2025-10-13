@@ -23,13 +23,13 @@ body {
   background-repeat: no-repeat; 
   background-position: center; 
    border: none;
+   opacity: 0.5;  
 }
 
 
 .game {
-  width: 100%;
+  width: 700px;
   height: 350px;
-  border-bottom: 2px solid #000;
   position: relative;
   overflow: hidden;
   top: 90px;
@@ -52,7 +52,7 @@ body {
   position: absolute;
   bottom: -29px;
   /* ajusta para ficar no lugar certo */
-  left: 20px;
+  left: 18px;
   /* ajuste fino pra alinhar */
   width: 160px;
   height: 150px;
