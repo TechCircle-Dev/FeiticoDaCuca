@@ -6,38 +6,36 @@ body {
   align-items: center;
   height: 100vh;
   font-family: sans-serif;
-  background-color: #000;
   border: none;
+  position: relative;
+ background-image: url('./img/nuvem1.gif');
+  background-size: cover;       /* cobre toda a tela */
+  background-repeat: no-repeat; /* não repete */
+  background-position: center 30%; /* ajusta verticalmente */
   
 }
 
-.fundo {
-  position: fixed;
-  left: 0;              
-  width: 100vw;        
-  height: 100vh;         
-  object-fit: cover;  
-  z-index: -1;         
-  background-image: url('./img/fundo9.jpg');
-  background-size: cover;       
-  background-repeat: no-repeat; 
-  background-position: center; 
-   border: none;
-   opacity: 0.5;  
+.chao{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  z-index: 0;
 }
 
-
 .game {
-  width: 700px;
-  height: 350px;
+  width: 100%;
+  height: 450px;
   position: relative;
   overflow: hidden;
-  top: 90px;
+  top: -70px;
+  z-index: 1;
+
 }
 
 #dino {
-  width: 180px;
-  height: 210px;
+  width: 360px;
+  height: 420px;
   position: absolute;
   bottom: 0;
   left: 50px;
@@ -49,31 +47,36 @@ body {
 }
 
 #foot {
-  position: absolute;
-  bottom: -29px;
-  /* ajusta para ficar no lugar certo */
-  left: 18px;
-  /* ajuste fino pra alinhar */
-  width: 160px;
-  height: 150px;
+   position: absolute;
+  bottom: -45px; /* ajustado levemente, já que cresceu */
+  left: 40px;    /* ajuste fino proporcional */
+  width: 313px;
+  height: 250px;
   transform-origin: center bottom;
   transition: transform 0.2s ease-in-out;
 }
 
 #cactus {
-  width: 250px;
-  height: 250px;
+  width: 350px;
+  height: 350px;
   position: absolute;
-  bottom: -90px;
+  bottom: -120px;
   left: 600px;
   z-index: 100000000px;
 }
+#cactus2 {
+  width: 200px;
+  height: 150px;
+  position: absolute;
+  bottom: -10px;
+  z-index: 100000000px;
+}
+
 
 /* Quadrados coloridos */
 .collectibleItems {
   position: absolute;
-  width: 3px;
-  height: 3px;
+  
 }
 
 /* Inventário no canto superior direito */
