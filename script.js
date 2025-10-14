@@ -90,6 +90,13 @@ function moveCactus() {
             cactus1Position = Math.max(base, cactus2Position + distance);
         } else {
             cactus2Position = Math.max(base, cactus1Position + distance);
+
+            // Alterna entre cacto2 e cacto3 aleatoriamente
+            if (Math.random() < 0.5) {
+                cactus2.src = "./img/pedra.png";
+            } else {
+                cactus2.src = "./img/mato.png";
+            }
         }
     }
 
