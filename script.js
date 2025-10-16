@@ -137,9 +137,52 @@ function moveCactus() {
     function endGame() {
         gameRunning = false;
         clearTimeout(runAnimationId);
-        document.body.innerHTML =
-            "<h1 style='text-align:center; color:white;'>Game Over</h1>";
+
+        // Cria overlay para congelar tela
+        const overlay = document.createElement("div");
+        overlay.style.position = "fixed";
+        overlay.style.top = "0";
+        overlay.style.left = "0";
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.background = "rgba(0,0,0,0.5)"; // escurece um pouco
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.flexDirection = "column";
+        overlay.style.zIndex = "1000"; // acima de tudo
+        document.body.appendChild(overlay);
+
+        // Mensagem Game Over
+        const msg = document.createElement("h1");
+        msg.textContent = "Game Over";
+        msg.style.color = "white";
+        overlay.appendChild(msg);
+
+        // Seta para voltar
+        const arrow = document.createElement("div");
+        arrow.innerHTML = "&#8592;"; // seta para esquerda
+        arrow.style.fontSize = "50px";
+        arrow.style.color = "white";
+        arrow.style.marginTop = "-10px";
+        overlay.appendChild(arrow);
+
+        // Flag para permitir reinício
+        let canRestart = false;
+
+        setTimeout(() => {
+            canRestart = true; // após 0,5s habilita space
+        }, 500);
+
+        // Detecta space para reiniciar
+        document.addEventListener("keydown", function restartListener(event) {
+            if (event.code === "Space" && canRestart) {
+                document.removeEventListener("keydown", restartListener);
+                location.reload(); // reinicia jogo
+            }
+        });
     }
+
 }
 
 // Iniciar animação do cacto e da corrida
@@ -214,7 +257,7 @@ function spawnCollectible() {
             if (uniqueCollectedCount === collectibleItems.length) {
                 clearTimeout(gameLoopId); // Para o cacto
                 clearTimeout(runAnimationId); // Para a animação de corrida
-                document.body.innerHTML = "<h1 style='text-align:center; color:white;'>PARABÉNS, VOCÊ GANHOU!</h1>";
+                window.location.href = "parabens.html";
             }
 
             return;

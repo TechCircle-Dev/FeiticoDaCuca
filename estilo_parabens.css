@@ -1,0 +1,143 @@
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  border: none;
+  position: relative;
+  background-image: url('./img/fundo4.gif');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center 100%;
+
+}
+
+.caldeirao {
+  width: 300px;
+  height: 300px;
+  margin-top: 280px;
+  margin-right: 220px;
+  opacity: 0.8;
+  position: absolute;
+  animation: neonBlinkImg 1s infinite alternate;
+}
+
+/* Animação do brilho para a imagem (somente cima, brilho mais suave) */
+@keyframes neonBlinkImg {
+  0% {
+    filter: drop-shadow(0 -2px 1px #39FF14)
+            drop-shadow(0 -3px 2px #39FF14)
+            drop-shadow(0 -3px 3px #39FF14);
+  }
+  50% {
+    filter: drop-shadow(0 -3px 2px #39FF14)
+            drop-shadow(0 -4px 4px #39FF14)
+            drop-shadow(0 -5px 5px #39FF14);
+  }
+  100% {
+    filter: drop-shadow(0 -2px 1px #39FF14)
+            drop-shadow(0 -3px 2px #39FF14)
+            drop-shadow(0 -4px 3px #39FF14);
+  }
+}
+
+
+.cuca {
+  width: 370px;
+  height: 400px;
+  position: absolute;
+  margin-left: 320px;
+  margin-top: 130px;
+
+  /* máscara inicial para efeito fumaça */
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 0%;
+  -webkit-mask-position: bottom;
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+  mask-repeat: no-repeat;
+  mask-size: 100% 0%;
+  mask-position: bottom;
+
+  /* brilho inicial para simular fumaça */
+  filter: brightness(0.5);
+
+  /* animação contínua mística */
+  animation: cucaMistica 6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+@keyframes cucaMistica {
+  0% {
+    -webkit-mask-size: 100% 0%;
+    mask-size: 100% 0%;
+    filter: brightness(0.4) drop-shadow(0 0 5px #000); 
+    transform: translateY(10px) rotate(-2deg); /* mexida inicial */
+  }
+  50% {
+    -webkit-mask-size: 100% 80%;
+    mask-size: 100% 80%;
+    filter: brightness(0.6) drop-shadow(0 0 10px #000);
+    transform: translateY(5px) rotate(1deg);
+  }
+  70% {
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    filter: brightness(0.7) drop-shadow(0 0 15px #000);
+    transform: translateY(0px) rotate(0deg);
+  }
+  85% {
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    filter: brightness(0.85) drop-shadow(0 0 10px #000);
+    transform: translateY(-2px) rotate(-1deg);
+  }
+  95% {
+    /* primeira oscilação do final */
+    filter: brightness(0.95) drop-shadow(0 0 8px #000);
+    transform: translateY(-1px) rotate(1deg);
+  }
+  100% {
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
+    mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
+    filter: brightness(1) drop-shadow(0 0 5px #000); 
+    transform: translateY(0px) rotate(0deg); /* mexida final suave */
+  }
+}
+
+
+
+@font-face {
+  font-family: 'Melted Monster';
+  src: url('./font/Melted\ Monster.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+svg {
+  display: block;
+  /* remove centralização automática */
+  margin-right: 900px;
+}
+
+.neon {
+  fill: #fff;
+  animation: neonBlink 1s infinite alternate;
+}
+
+@keyframes neonBlink {
+  0% {
+    text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 6px #fff, 0 0 10px #fff;
+  }
+
+  50% {
+    text-shadow: 0 0 3px #fff, 0 0 6px #fff, 0 0 9px #fff, 0 0 15px #fff;
+  }
+
+  100% {
+    text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 6px #fff, 0 0 10px #fff;
+  }
+}
