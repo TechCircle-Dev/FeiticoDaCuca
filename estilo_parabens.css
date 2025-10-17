@@ -27,19 +27,15 @@ body {
 /* Animação do brilho para a imagem (somente cima, brilho mais suave) */
 @keyframes neonBlinkImg {
   0% {
-    filter: drop-shadow(0 -2px 1px #39FF14)
-            drop-shadow(0 -3px 2px #39FF14)
-            drop-shadow(0 -3px 3px #39FF14);
+    filter: drop-shadow(0 -2px 1px #39FF14) drop-shadow(0 -3px 2px #39FF14) drop-shadow(0 -3px 3px #39FF14);
   }
+
   50% {
-    filter: drop-shadow(0 -3px 2px #39FF14)
-            drop-shadow(0 -4px 4px #39FF14)
-            drop-shadow(0 -5px 5px #39FF14);
+    filter: drop-shadow(0 -3px 2px #39FF14) drop-shadow(0 -4px 4px #39FF14) drop-shadow(0 -5px 5px #39FF14);
   }
+
   100% {
-    filter: drop-shadow(0 -2px 1px #39FF14)
-            drop-shadow(0 -3px 2px #39FF14)
-            drop-shadow(0 -4px 3px #39FF14);
+    filter: drop-shadow(0 -2px 1px #39FF14) drop-shadow(0 -3px 2px #39FF14) drop-shadow(0 -4px 3px #39FF14);
   }
 }
 
@@ -52,11 +48,11 @@ body {
   margin-top: 130px;
 
   /* máscara inicial para efeito fumaça */
-  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: 100% 0%;
   -webkit-mask-position: bottom;
-  mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
   mask-repeat: no-repeat;
   mask-size: 100% 0%;
   mask-position: bottom;
@@ -72,39 +68,46 @@ body {
   0% {
     -webkit-mask-size: 100% 0%;
     mask-size: 100% 0%;
-    filter: brightness(0.4) drop-shadow(0 0 5px #000); 
-    transform: translateY(10px) rotate(-2deg); /* mexida inicial */
+    filter: brightness(0.4) drop-shadow(0 0 5px #000);
+    transform: translateY(10px) rotate(-2deg);
+    /* mexida inicial */
   }
+
   50% {
     -webkit-mask-size: 100% 80%;
     mask-size: 100% 80%;
     filter: brightness(0.6) drop-shadow(0 0 10px #000);
     transform: translateY(5px) rotate(1deg);
   }
+
   70% {
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
     filter: brightness(0.7) drop-shadow(0 0 15px #000);
     transform: translateY(0px) rotate(0deg);
   }
+
   85% {
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
     filter: brightness(0.85) drop-shadow(0 0 10px #000);
     transform: translateY(-2px) rotate(-1deg);
   }
+
   95% {
     /* primeira oscilação do final */
     filter: brightness(0.95) drop-shadow(0 0 8px #000);
     transform: translateY(-1px) rotate(1deg);
   }
+
   100% {
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
-    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
-    mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
-    filter: brightness(1) drop-shadow(0 0 5px #000); 
-    transform: translateY(0px) rotate(0deg); /* mexida final suave */
+    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 100%);
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 100%);
+    filter: brightness(1) drop-shadow(0 0 5px #000);
+    transform: translateY(0px) rotate(0deg);
+    /* mexida final suave */
   }
 }
 
@@ -139,5 +142,41 @@ svg {
 
   100% {
     text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 6px #fff, 0 0 10px #fff;
+  }
+}
+
+
+/* RESPONSIVO */
+
+@media (max-width: 600px) {
+
+  .cuca {
+    width: 270px;
+    height: 300px;
+    right: 1px;
+    top: 300px
+  }
+
+  body {
+    width: auto;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+  }
+
+  .caldeirao {
+    width: 200px;
+    height: 200px;
+    left: 5px;
+    top: 270px;
+  }
+
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    transform: translate(-50px, -90px);
   }
 }
