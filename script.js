@@ -185,7 +185,7 @@ function moveCactus() {
         document.addEventListener("keydown", function restartListener(event) {
             if (event.code === "Space" && canRestart) {
                 document.removeEventListener("keydown", restartListener);
-                location.reload(); // reinicia jogo
+                location.reload(); 
             }
         });
 
