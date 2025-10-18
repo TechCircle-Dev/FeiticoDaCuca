@@ -70,76 +70,76 @@ function runAnimation() {
 
 // Movimento do cacto (Cria a ilusão de que o dinossauro avança)
 function moveCactus() {
-  const cactus1 = document.getElementById("cactus");
-  const cactus2 = document.getElementById("cactus2");
+    const cactus1 = document.getElementById("cactus");
+    const cactus2 = document.getElementById("cactus2");
 
-  let cactus1Position = 800;
-  let cactus2Position = 1300;
-  let speed = 5;
-  let speedIncrease = 0;
-  let gameRunning = true;
+    let cactus1Position = 800;
+    let cactus2Position = 1300;
+    let speed = 5;
+    let speedIncrease = 0;
+    let gameRunning = true;
 
-  cactus1.style.display = "block";
-  cactus2.style.display = "block";
+    cactus1.style.display = "block";
+    cactus2.style.display = "block";
 
-  // 🔥 Detecta se é mobile
-  const isMobile = window.innerWidth <= 600;
+    // 🔥 Detecta se é mobile
+    const isMobile = window.innerWidth <= 600;
 
-  // 🔥 Define raio de colisão diferente
-  const hitbox = isMobile
-    ? { leftMin: 30, leftMax: 120, heightMax: 30 } // área menor no celular
-    : { leftMin: 20, leftMax: 200, heightMax: 40 }; // padrão no desktop
+    // 🔥 Define raio de colisão diferente
+    const hitbox = isMobile
+        ? { leftMin: 30, leftMax: 120, heightMax: 30 } // área menor no celular
+        : { leftMin: 20, leftMax: 200, heightMax: 40 }; // padrão no desktop
 
-  function resetCactus(which) {
-    const base = 800 + Math.random() * 400;
-    const distance = 250 + Math.random() * 200;
+    function resetCactus(which) {
+        const base = 800 + Math.random() * 400;
+        const distance = 250 + Math.random() * 200;
 
-    if (which === 1) {
-      cactus1Position = Math.max(base, cactus2Position + distance);
-    } else {
-      cactus2Position = Math.max(base, cactus1Position + distance);
-      if (Math.random() < 0.5) {
-        cactus2.src = "./img/pedra.png";
-      } else {
-        cactus2.src = "./img/mato.png";
-      }
-    }
-  }
-
-  function update() {
-    if (!gameRunning) return;
-
-    cactus1Position -= speed;
-    cactus2Position -= speed;
-
-    cactus1.style.left = cactus1Position + "px";
-    cactus2.style.left = cactus2Position + "px";
-
-    // ✅ Colisão adaptada ao tamanho da tela
-    if (
-      (cactus1Position > hitbox.leftMin &&
-        cactus1Position < hitbox.leftMax &&
-        position < hitbox.heightMax) ||
-      (cactus2Position > hitbox.leftMin &&
-        cactus2Position < hitbox.leftMax &&
-        position < hitbox.heightMax)
-    ) {
-      endGame();
-      return;
+        if (which === 1) {
+            cactus1Position = Math.max(base, cactus2Position + distance);
+        } else {
+            cactus2Position = Math.max(base, cactus1Position + distance);
+            if (Math.random() < 0.5) {
+                cactus2.src = "./img/pedra.png";
+            } else {
+                cactus2.src = "./img/mato.png";
+            }
+        }
     }
 
-    if (cactus1Position < -100) resetCactus(1);
-    if (cactus2Position < -100) resetCactus(2);
+    function update() {
+        if (!gameRunning) return;
 
-    if (speedIncrease < 800) {
-      speedIncrease++;
-      speed = 5 + speedIncrease * 0.005;
+        cactus1Position -= speed;
+        cactus2Position -= speed;
+
+        cactus1.style.left = cactus1Position + "px";
+        cactus2.style.left = cactus2Position + "px";
+
+        // ✅ Colisão adaptada ao tamanho da tela
+        if (
+            (cactus1Position > hitbox.leftMin &&
+                cactus1Position < hitbox.leftMax &&
+                position < hitbox.heightMax) ||
+            (cactus2Position > hitbox.leftMin &&
+                cactus2Position < hitbox.leftMax &&
+                position < hitbox.heightMax)
+        ) {
+            endGame();
+            return;
+        }
+
+        if (cactus1Position < -100) resetCactus(1);
+        if (cactus2Position < -100) resetCactus(2);
+
+        if (speedIncrease < 800) {
+            speedIncrease++;
+            speed = 5 + speedIncrease * 0.005;
+        }
+
+        requestAnimationFrame(update);
     }
 
-    requestAnimationFrame(update);
-  }
-
-  update();
+    update();
 
     function endGame() {
         gameRunning = false;
@@ -188,6 +188,15 @@ function moveCactus() {
                 location.reload(); // reinicia jogo
             }
         });
+
+        document.addEventListener("touchstart", function restartTouch() {
+            if (canRestart) {
+                document.removeEventListener("touchstart", restartTouch);
+                location.reload(); // reinicia o jogo
+            }
+        });
+
+
     }
 
 }
@@ -199,19 +208,19 @@ runAnimation();
 
 // Detecção de tecla espaço para pular
 document.addEventListener("keydown", (event) => {
-  if (event.code === "Space") {
-    jump();
-  }
+    if (event.code === "Space") {
+        jump();
+    }
 });
 
 // 👉 Detecta toque na tela (Celular)
 document.addEventListener("touchstart", (event) => {
-  jump();
+    jump();
 });
 
 // 👉 (opcional) clique também funciona — útil em desktop com mouse
 document.addEventListener("click", (event) => {
-  jump();
+    jump();
 });
 
 
