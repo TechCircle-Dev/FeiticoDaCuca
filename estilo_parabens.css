@@ -14,10 +14,34 @@ body {
 
 }
 
+.vinheta {
+  position: absolute;
+  pointer-events: none;
+  /* não bloqueia cliques nem toques */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%,
+      /* foco da luz sobre a Cuca */
+      rgba(0, 0, 0, 0) 5%,
+      /* centro completamente transparente */
+      rgba(0, 0, 0, 0.45) 25%,
+      /* escurece rápido */
+      rgba(0, 0, 0, 0.75) 60%,
+      /* quase preto */
+      rgba(0, 0, 0, 0.95) 80%,
+      /* preto total */
+      rgba(0, 0, 0, 1) 100%
+      /* bordas totalmente pretas */
+    );
+  z-index: 9999;
+}
+
 .caldeirao {
   width: 300px;
   height: 300px;
-  margin-top: 280px;
+  margin-top: 180px;
   margin-right: 220px;
   opacity: 0.8;
   position: absolute;
@@ -27,16 +51,11 @@ body {
 /* Animação do brilho para a imagem (somente cima, brilho mais suave) */
 @keyframes neonBlinkImg {
   0% {
-    filter: drop-shadow(0 -2px 1px #39FF14) drop-shadow(0 -3px 2px #39FF14) drop-shadow(0 -3px 3px #39FF14);
+    filter: drop-shadow(0 -2px 1px #22ff00c9);
   }
 
-  50% {
-    filter: drop-shadow(0 -3px 2px #39FF14) drop-shadow(0 -4px 4px #39FF14) drop-shadow(0 -5px 5px #39FF14);
-  }
 
-  100% {
-    filter: drop-shadow(0 -2px 1px #39FF14) drop-shadow(0 -3px 2px #39FF14) drop-shadow(0 -4px 3px #39FF14);
-  }
+
 }
 
 
@@ -45,7 +64,7 @@ body {
   height: 400px;
   position: absolute;
   margin-left: 320px;
-  margin-top: 130px;
+  margin-top: 50px;
 
   /* máscara inicial para efeito fumaça */
   -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
@@ -123,7 +142,7 @@ body {
 svg {
   display: block;
   /* remove centralização automática */
-  margin-right: 900px;
+  margin-right: 420px;
 }
 
 .neon {
@@ -133,15 +152,15 @@ svg {
 
 @keyframes neonBlink {
   0% {
-    text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 6px #fff, 0 0 10px #fff;
+    text-shadow: 0 0 2px #ffa2f3, 0 0 4px #ffa2f3, 0 0 6px #ffa2f3, 0 0 10px #ffa2f3;
   }
 
   50% {
-    text-shadow: 0 0 3px #fff, 0 0 6px #fff, 0 0 9px #fff, 0 0 15px #fff;
+    text-shadow: 0 0 3px #ffa2f3, 0 0 6px #ffa2f3, 0 0 9px #6c3665, 0 0 15px #6c3665;
   }
 
   100% {
-    text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 6px #fff, 0 0 10px #fff;
+    text-shadow: 0 0 2px #ffa2f3, 0 0 4px #ffa2f3, 0 0 6px #ffa2f3, 0 0 10px #ffa2f3;
   }
 }
 
@@ -151,8 +170,8 @@ svg {
 @media (max-width: 600px) {
 
   .cuca {
-    width: 270px;
-    height: 300px;
+    width: 230px;
+    height: 260px;
     right: 1px;
     top: 300px
   }
@@ -161,15 +180,13 @@ svg {
     width: auto;
     justify-content: center;
     align-items: center;
-    display: flex;
-
   }
 
   .caldeirao {
     width: 200px;
     height: 200px;
-    left: 5px;
-    top: 270px;
+    left: 35px;
+    top: 240px;
   }
 
   svg {
@@ -177,6 +194,34 @@ svg {
     height: auto;
     display: block;
     margin: 0 auto;
-    transform: translate(-50px, -90px);
+    transform: translate(-80px, -10px);
+    
   }
+ .voltar {
+    width: auto;
+    left: 100px;
+    top: 650px;
+    transform: translateX(-50%);
+    text-align: center;
+    
+  }
+  
+
+}
+
+.voltar {
+  position: absolute;
+  width: 400px;
+  height: 100px;
+  right: 520px;
+  bottom: 0;
+  z-index: 9999999;
+}
+
+.texto_voltar{
+  position: absolute;
+  color: #fff;
+  font-weight: none;
+  font-family: 'Melted Monster';
+  font-size: 35px;
 }

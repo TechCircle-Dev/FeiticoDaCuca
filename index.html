@@ -10,15 +10,16 @@
 </head>
 
 <body>
+        <div id="inventory"></div>
 
   <div class="game">
+
     <div id="dino">
       <img id="foot" src="./img/pe.png" />
     </div>
     <img id="cactus" src="./img/rip.png">
     <img id="cactus2" src="./img/abo.png">
     <img id="cactus3" src="./img/mato.png">
-    <div id="inventory"></div>
   
   </div>
   <img class="chao" src="./img/chaoo.png">
@@ -29,7 +30,21 @@
   <script src="script.js"></script>
 <audio id="bgMusic" src="./audio/audio.mp3" loop></audio>
 
+<script>
+  const music = document.getElementById("bgMusic");
+  music.volume = 1; // ajuste do volume
 
+  // Mostra um aviso ou tela inicial para o usuário clicar
+  const startGame = () => {
+    music.play().catch(() => {
+      console.log("Clique para iniciar a música"); 
+    });
+  };
+
+  // Dispara no primeiro clique ou toque do usuário
+  document.body.addEventListener("keydown", startGame, { once: true });
+  document.body.addEventListener("touchstart", startGame, { once: true });
+</script>
 
 
 

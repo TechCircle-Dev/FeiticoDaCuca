@@ -2,36 +2,84 @@ const dino = document.getElementById("dino");
 const cactus = document.getElementById("cactus");
 const inventory = document.getElementById("inventory");
 const collectibleItems = [
-    { name: "olho", src: "./img/olho.png" }, // Verifique este caminho
-    { name: "lavanda", src: "./img/lavanda.png" }, // Verifique este caminho
-    { name: "anis", src: "./img/maca.png" } // Verifique este caminho
+    { name: "olho", src: "./img/olho.png" },
+    { name: "lavanda", src: "./img/lavanda.png" },
+    { name: "anis", src: "./img/maca.png" }
 ];
 
 const collectedCounts = {};
-
 let isJumping = false;
-let position = 0; // Posição vertical do dino (bottom CSS)
-let gameLoopId; // ID para o loop principal do jogo (colisão do cacto)
-let runAnimationId; // ID para o loop da animação de corrida
+let position = 0;
+let gameLoopId;
+let runAnimationId;
+let gameRunning = false; // 🟢 flag para controlar início do jogo
 
- 
-// Movimento de pulo
+// ------------------- FUNÇÃO DE INÍCIO -------------------
+function showStartScreen() {
+   // Criar overlay
+const overlay = document.createElement("div");
+overlay.style.position = "fixed";
+overlay.style.top = "0";
+overlay.style.left = "0";
+overlay.style.width = "100%";
+overlay.style.height = "100%";
+overlay.style.background = "rgba(0,0,0,0.7)";
+overlay.style.display = "flex";
+overlay.style.alignItems = "center";
+overlay.style.justifyContent = "center";
+overlay.style.flexDirection = "column";
+overlay.style.zIndex = "10000";
+document.body.appendChild(overlay);
+
+// Criar mensagem
+const msg = document.createElement("h1");
+msg.textContent = "Clique na tela ou pressione ESPAÇO para começar";
+msg.style.color = "white";
+msg.style.textAlign = "center";
+msg.style.padding = "20px";
+msg.style.letterSpacing = "4px"; 
+msg.style.fontSize = "70px"
+
+// Aplicar a fonte personalizada
+msg.style.fontFamily = "horroroid, sans-serif"; 
+
+overlay.appendChild(msg);
+
+
+    function startGame() {
+        document.removeEventListener("keydown", startListener);
+        document.removeEventListener("touchstart", startTouch);
+        overlay.remove();
+        gameRunning = true;
+        moveCactus();
+        runAnimation();
+    }
+
+    function startListener(e) {
+        if (e.code === "Space") startGame();
+    }
+
+    function startTouch() {
+        startGame();
+    }
+
+    document.addEventListener("keydown", startListener);
+    document.addEventListener("touchstart", startTouch);
+}
+
+// ------------------- PULO -------------------
 function jump() {
     if (isJumping) return;
     isJumping = true;
 
     const foot = document.getElementById("foot");
-    // Animação de pulo: pé levanta
     foot.style.transform = "rotate(15deg)";
 
     let upInterval = setInterval(() => {
-        if (position >= 250) { // Altura máxima do pulo
+        if (position >= 250) {
             clearInterval(upInterval);
-
-            // Pé volta ao normal no topo do pulo
             foot.style.transform = "rotate(0deg)";
 
-            // Queda
             let downInterval = setInterval(() => {
                 if (position <= 0) {
                     clearInterval(downInterval);
@@ -48,41 +96,33 @@ function jump() {
     }, 8);
 }
 
-
-// Animação de corrida (Simula o movimento fixo)
+// ------------------- ANIMAÇÃO DE CORRIDA -------------------
 function runAnimation() {
     const foot = document.getElementById("foot");
 
     function step() {
         if (!isJumping) {
-            // Alterna a rotação do pé para simular a corrida
-            if (foot.style.transform === "rotate(8deg)") {
-                foot.style.transform = "rotate(0deg)"; // Pé no chão
-            } else {
-                foot.style.transform = "rotate(8deg)"; // Pé levantado (para trás)
-            }
+            foot.style.transform = foot.style.transform === "rotate(8deg)" ? "rotate(0deg)" : "rotate(8deg)";
         }
-        // Repete a cada 300ms
         runAnimationId = setTimeout(step, 300);
     }
-    step(); // Inicia o loop da animação
+    step();
 }
 
-
+// ------------------- MOVIMENTO DO CACTO -------------------
 function moveCactus() {
     const cactus1 = document.getElementById("cactus");
     const cactus2 = document.getElementById("cactus2");
-    const cactus3 = document.getElementById("cactus3"); // 🌵 NOVO
+    const cactus3 = document.getElementById("cactus3");
 
     let cactus1Position = 800;
     let cactus2Position = 1300;
     let speed = 5;
     let speedIncrease = 0;
-    let gameRunning = true;
 
     cactus1.style.display = "block";
     cactus2.style.display = "block";
-    cactus3.style.display = "none"; // 🌵 começa invisível
+    cactus3.style.display = "none";
 
     const isMobile = window.innerWidth <= 600;
     const hitbox = isMobile
@@ -97,16 +137,11 @@ function moveCactus() {
             cactus1Position = Math.max(base, cactus2Position + distance);
         } else {
             cactus2Position = Math.max(base, cactus1Position + distance);
-
-            // 🌵 alterna entre cactus2 e cactus3
             const useCactus3 = Math.random() < 0.5;
             cactus2.style.display = useCactus3 ? "none" : "block";
             cactus3.style.display = useCactus3 ? "block" : "none";
 
-            // 🌵 reposiciona o cactus3 quando for ativo
-            if (useCactus3) {
-                cactus3.style.left = cactus2Position + "px";
-            }
+            if (useCactus3) cactus3.style.left = cactus2Position + "px";
         }
     }
 
@@ -118,20 +153,12 @@ function moveCactus() {
 
         cactus1.style.left = cactus1Position + "px";
         cactus2.style.left = cactus2Position + "px";
-        cactus3.style.left = cactus2Position + "px"; // 🌵 segue posição do cactus2
+        cactus3.style.left = cactus2Position + "px";
 
         if (
-            (cactus1Position > hitbox.leftMin &&
-                cactus1Position < hitbox.leftMax &&
-                position < hitbox.heightMax) ||
-            (cactus2Position > hitbox.leftMin &&
-                cactus2Position < hitbox.leftMax &&
-                position < hitbox.heightMax &&
-                cactus2.style.display === "block") ||
-            (cactus2Position > hitbox.leftMin &&
-                cactus2Position < hitbox.leftMax &&
-                position < hitbox.heightMax &&
-                cactus3.style.display === "block")
+            (cactus1Position > hitbox.leftMin && cactus1Position < hitbox.leftMax && position < hitbox.heightMax) ||
+            (cactus2Position > hitbox.leftMin && cactus2Position < hitbox.leftMax && position < hitbox.heightMax && cactus2.style.display === "block") ||
+            (cactus2Position > hitbox.leftMin && cactus2Position < hitbox.leftMax && position < hitbox.heightMax && cactus3.style.display === "block")
         ) {
             endGame();
             return;
@@ -151,156 +178,119 @@ function moveCactus() {
     update();
 }
 
+// ------------------- GAME OVER -------------------
+function endGame() {
+    gameRunning = false;
+    clearTimeout(runAnimationId);
 
-    function endGame() {
-        gameRunning = false;
-        clearTimeout(runAnimationId);
+    const overlay = document.createElement("div");
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.background = "rgba(0,0,0,0.5)";
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
+    overlay.style.flexDirection = "column";
+    overlay.style.zIndex = "100000";
+    document.body.appendChild(overlay);
 
-        // Cria overlay para congelar tela
-        const overlay = document.createElement("div");
-        overlay.style.position = "fixed";
-        overlay.style.top = "0";
-        overlay.style.left = "0";
-        overlay.style.width = "100%";
-        overlay.style.height = "100%";
-        overlay.style.background = "rgba(0,0,0,0.5)"; // escurece um pouco
-        overlay.style.display = "flex";
-        overlay.style.alignItems = "center";
-        overlay.style.justifyContent = "center";
-        overlay.style.flexDirection = "column";
-        overlay.style.zIndex = "1000"; // acima de tudo
-        document.body.appendChild(overlay);
+    const msg = document.createElement("h1");
+    msg.textContent = "Game Over";
+    msg.style.color = "white";
+    overlay.appendChild(msg);
+    msg.style.letterSpacing = "4px"; 
+msg.style.fontSize = "70px"
 
-        // Mensagem Game Over
-        const msg = document.createElement("h1");
-        msg.textContent = "Game Over";
-        msg.style.color = "white";
-        overlay.appendChild(msg);
+// Aplicar a fonte personalizada
+msg.style.fontFamily = "horroroid, sans-serif"; 
 
-        // Seta para voltar
-        const arrow = document.createElement("div");
-        arrow.innerHTML = "&#8592;"; // seta para esquerda
-        arrow.style.fontSize = "50px";
-        arrow.style.color = "white";
-        arrow.style.marginTop = "-10px";
-        overlay.appendChild(arrow);
+    const arrow = document.createElement("div");
+    arrow.innerHTML = "&#8592;";
+    arrow.style.fontSize = "50px";
+    arrow.style.color = "white";
+    arrow.style.marginTop = "-10px";
+    overlay.appendChild(arrow);
 
-        // Flag para permitir reinício
-        let canRestart = false;
+    let canRestart = false;
+    setTimeout(() => (canRestart = true), 500);
 
-        setTimeout(() => {
-            canRestart = true; // após 0,5s habilita space
-        }, 500);
+    document.addEventListener("keydown", function restartListener(event) {
+        if (event.code === "Space" && canRestart) {
+            document.removeEventListener("keydown", restartListener);
+            location.reload();
+        }
+    });
 
-        // Detecta space para reiniciar
-        document.addEventListener("keydown", function restartListener(event) {
-            if (event.code === "Space" && canRestart) {
-                document.removeEventListener("keydown", restartListener);
-                location.reload(); 
-            }
-        });
+    document.addEventListener("touchstart", function restartTouch() {
+        if (canRestart) {
+            document.removeEventListener("touchstart", restartTouch);
+            location.reload();
+        }
+    });
+}
 
-        document.addEventListener("touchstart", function restartTouch() {
-            if (canRestart) {
-                document.removeEventListener("touchstart", restartTouch);
-                location.reload(); // reinicia o jogo
-            }
-        });
+// ------------------- INÍCIO -------------------
+showStartScreen();
 
-
-    }
-
-
-
-// Iniciar animação do cacto e da corrida
-moveCactus();
-runAnimation();
-
-
-// Detecção de tecla espaço para pular
+// ------------------- CONTROLES DE PULO -------------------
 document.addEventListener("keydown", (event) => {
-    if (event.code === "Space") {
-        jump();
-    }
+    if (event.code === "Space") jump();
 });
 
-// 👉 Detecta toque na tela (Celular)
-document.addEventListener("touchstart", (event) => {
-    jump();
-});
+document.addEventListener("touchstart", () => jump());
+document.addEventListener("click", () => jump());
 
-// 👉 (opcional) clique também funciona — útil em desktop com mouse
-document.addEventListener("click", (event) => {
-    jump();
-});
-
-
-// Funções de Coleta e Inventário
+// ------------------- FUNÇÕES DE COLETA -------------------
 function spawnCollectible() {
-    // Se o jogo acabou, não spawna mais
-    if (document.body.innerHTML.includes("Game Over") || document.body.innerHTML.includes("PARABÉNS")) return;
+    if (!gameRunning) return;
 
     const collectible = document.createElement("img");
     collectible.classList.add("collectible");
-
-    // Escolhe um item aleatório
     const itemData = collectibleItems[Math.floor(Math.random() * collectibleItems.length)];
     collectible.src = itemData.src;
     collectible.dataset.name = itemData.name;
 
-    // Posição inicial fora da tela e altura fixa (para serem alcançáveis)
     let collectiblePosition = 700;
     collectible.style.left = collectiblePosition + "px";
     collectible.style.bottom = "400px";
     collectible.style.position = "absolute";
     collectible.style.width = "45px";
     collectible.style.height = "45px";
-    collectible.style.zIndex = "15"; // Fica acima do cacto
+    collectible.style.zIndex = "150000000000";
 
     const gameArea = document.querySelector(".game");
     gameArea.appendChild(collectible);
 
-    let speed = 20; // Velocidade de movimento do item (pode ser ajustada)
+    let speed = 20;
     let timerId;
 
     function moveCollectible() {
         collectiblePosition -= 5;
         collectible.style.left = collectiblePosition + "px";
 
-        // Posições para detecção de colisão/coleta
         const dinoLeft = dino.offsetLeft;
         const dinoRight = dinoLeft + dino.offsetWidth;
         const collectibleLeft = collectiblePosition;
         const collectibleRight = collectibleLeft + collectible.offsetWidth;
 
-        // Condição para coletar: Pulo e intersecção horizontal
-        if (
-            isJumping &&
-            position >= 140 && // Coleta na subida ou ápice do pulo
-            collectibleRight > dinoLeft + 40 && // Margem de colisão (ajuste fino)
-            collectibleLeft < dinoRight - 40
-        ) {
+        if (isJumping && position >= 140 && collectibleRight > dinoLeft + 40 && collectibleLeft < dinoRight - 40) {
             clearTimeout(timerId);
             collectible.remove();
 
-            // Adiciona ao inventário
             collectedCounts[itemData.name] = (collectedCounts[itemData.name] || 0) + 1;
-
-            // Atualiza o inventário
             updateInventory();
 
-            // Checa a condição de vitória
-            const uniqueCollectedCount = Object.keys(collectedCounts).length;
-            if (uniqueCollectedCount === collectibleItems.length) {
-                clearTimeout(gameLoopId); // Para o cacto
-                clearTimeout(runAnimationId); // Para a animação de corrida
+            if (Object.keys(collectedCounts).length === collectibleItems.length) {
+                clearTimeout(gameLoopId);
+                clearTimeout(runAnimationId);
                 window.location.href = "parabens.html";
             }
-
             return;
         }
 
-        // Remove se sair da tela sem ser coletado
         if (collectiblePosition < -100) {
             clearTimeout(timerId);
             collectible.remove();
@@ -314,15 +304,12 @@ function spawnCollectible() {
 }
 
 function updateInventory() {
-    inventory.innerHTML = ""; // limpa inventário
-
+    inventory.innerHTML = "";
     for (const itemName in collectedCounts) {
         const count = collectedCounts[itemName];
         if (count > 0) {
-            // Procura os dados do item (src)
             const itemData = collectibleItems.find(item => item.name === itemName);
 
-            // Cria um container pra imagem + contador
             const container = document.createElement("div");
             container.style.position = "relative";
             container.style.display = "inline-block";
@@ -340,16 +327,15 @@ function updateInventory() {
             countBadge.style.color = "white";
             countBadge.style.textShadow = "1px 1px 2px black";
             countBadge.style.fontSize = "20px";
-            countBadge.style.padding = "6px 6px 6px 6px";
+            countBadge.style.padding = "6px";
             countBadge.style.borderRadius = "10px";
 
             container.appendChild(img);
             container.appendChild(countBadge);
-
             inventory.appendChild(container);
         }
     }
 }
 
-// Spawna um novo item colecionável a cada 3 segundos
+// Spawna itens a cada 3s
 setInterval(spawnCollectible, 3000);

@@ -18,6 +18,14 @@ body {
   
 }
 
+@font-face {
+  font-family: 'horroroid';
+  src: url('./font/horroroid.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 .vinheta {
   position: absolute;
   pointer-events: none; /* não bloqueia cliques nem toques */
@@ -113,12 +121,13 @@ body {
 
 /* Inventário no canto superior direito */
 #inventory {
-  position: fixed;
+  position: fixed;   /* já garante que segue a tela */
   top: 10px;
   right: 15px;
   display: flex;
   gap: 35px;
   padding: 15px;
+  z-index: 99999999; /* muito maior que a vinheta */
 }
 
 /* RESPONSIVO */
