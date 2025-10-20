@@ -14,6 +14,7 @@ let position = 0; // Posição vertical do dino (bottom CSS)
 let gameLoopId; // ID para o loop principal do jogo (colisão do cacto)
 let runAnimationId; // ID para o loop da animação de corrida
 
+ 
 // Movimento de pulo
 function jump() {
     if (isJumping) return;
@@ -68,10 +69,10 @@ function runAnimation() {
 }
 
 
-// Movimento do cacto (Cria a ilusão de que o dinossauro avança)
 function moveCactus() {
     const cactus1 = document.getElementById("cactus");
     const cactus2 = document.getElementById("cactus2");
+    const cactus3 = document.getElementById("cactus3"); // 🌵 NOVO
 
     let cactus1Position = 800;
     let cactus2Position = 1300;
@@ -81,14 +82,12 @@ function moveCactus() {
 
     cactus1.style.display = "block";
     cactus2.style.display = "block";
+    cactus3.style.display = "none"; // 🌵 começa invisível
 
-    // 🔥 Detecta se é mobile
     const isMobile = window.innerWidth <= 600;
-
-    // 🔥 Define raio de colisão diferente
     const hitbox = isMobile
-        ? { leftMin: 30, leftMax: 120, heightMax: 30 } // área menor no celular
-        : { leftMin: 20, leftMax: 200, heightMax: 40 }; // padrão no desktop
+        ? { leftMin: 90, leftMax: 140, heightMax: 30 }
+        : { leftMin: 50, leftMax: 230, heightMax: 30 };
 
     function resetCactus(which) {
         const base = 800 + Math.random() * 400;
@@ -98,10 +97,15 @@ function moveCactus() {
             cactus1Position = Math.max(base, cactus2Position + distance);
         } else {
             cactus2Position = Math.max(base, cactus1Position + distance);
-            if (Math.random() < 0.5) {
-                cactus2.src = "./img/pedra.png";
-            } else {
-                cactus2.src = "./img/mato.png";
+
+            // 🌵 alterna entre cactus2 e cactus3
+            const useCactus3 = Math.random() < 0.5;
+            cactus2.style.display = useCactus3 ? "none" : "block";
+            cactus3.style.display = useCactus3 ? "block" : "none";
+
+            // 🌵 reposiciona o cactus3 quando for ativo
+            if (useCactus3) {
+                cactus3.style.left = cactus2Position + "px";
             }
         }
     }
@@ -114,15 +118,20 @@ function moveCactus() {
 
         cactus1.style.left = cactus1Position + "px";
         cactus2.style.left = cactus2Position + "px";
+        cactus3.style.left = cactus2Position + "px"; // 🌵 segue posição do cactus2
 
-        // ✅ Colisão adaptada ao tamanho da tela
         if (
             (cactus1Position > hitbox.leftMin &&
                 cactus1Position < hitbox.leftMax &&
                 position < hitbox.heightMax) ||
             (cactus2Position > hitbox.leftMin &&
                 cactus2Position < hitbox.leftMax &&
-                position < hitbox.heightMax)
+                position < hitbox.heightMax &&
+                cactus2.style.display === "block") ||
+            (cactus2Position > hitbox.leftMin &&
+                cactus2Position < hitbox.leftMax &&
+                position < hitbox.heightMax &&
+                cactus3.style.display === "block")
         ) {
             endGame();
             return;
@@ -140,6 +149,8 @@ function moveCactus() {
     }
 
     update();
+}
+
 
     function endGame() {
         gameRunning = false;
@@ -199,7 +210,7 @@ function moveCactus() {
 
     }
 
-}
+
 
 // Iniciar animação do cacto e da corrida
 moveCactus();
