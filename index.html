@@ -10,7 +10,10 @@
 </head>
 
 <body>
-        <div id="inventory"></div>
+  <div id="accessibilityIcon"></div>
+  <audio id="alertSound" src="./audio/som.mp3"></audio>
+
+  <div id="inventory"></div>
 
   <div class="game">
 
@@ -20,7 +23,7 @@
     <img id="cactus" src="./img/rip.png">
     <img id="cactus2" src="./img/abo.png">
     <img id="cactus3" src="./img/mato.png">
-  
+
   </div>
   <img class="chao" src="./img/chaoo.png">
 
@@ -28,23 +31,27 @@
 
 
   <script src="script.js"></script>
-<audio id="bgMusic" src="./audio/audio.mp3" loop></audio>
+  <audio id="bgMusic" src="./audio/audio.mp3" loop></audio>
 
-<script>
-  const music = document.getElementById("bgMusic");
-  music.volume = 1; // ajuste do volume
+  <script>
+    const music = document.getElementById("bgMusic");
+    const audioCtx = new AudioContext();
+    const track = audioCtx.createMediaElementSource(music);
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = 4; // 2x mais alto (cuidado para não distorcer)
+    track.connect(gainNode).connect(audioCtx.destination);
 
-  // Mostra um aviso ou tela inicial para o usuário clicar
-  const startGame = () => {
-    music.play().catch(() => {
-      console.log("Clique para iniciar a música"); 
-    });
-  };
+    // Mostra um aviso ou tela inicial para o usuário clicar
+    const startGame = () => {
+      music.play().catch(() => {
+        console.log("Clique para iniciar a música");
+      });
+    };
 
-  // Dispara no primeiro clique ou toque do usuário
-  document.body.addEventListener("keydown", startGame, { once: true });
-  document.body.addEventListener("touchstart", startGame, { once: true });
-</script>
+    // Dispara no primeiro clique ou toque do usuário
+    document.body.addEventListener("keydown", startGame, { once: true });
+    document.body.addEventListener("touchstart", startGame, { once: true });
+  </script>
 
 
 

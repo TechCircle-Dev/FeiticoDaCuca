@@ -32,6 +32,27 @@
         <span class="texto_voltar">Jogar novamente?</span>
     </a>
     <div class="vinheta"></div>
+
+     <audio id="bgMusic" src="./audio/bruxa.mp3" loop></audio>
+
+ <script>
+  window.addEventListener("load", () => {
+    const music = document.getElementById("bgMusic");
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const track = audioCtx.createMediaElementSource(music);
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = 4;
+    track.connect(gainNode).connect(audioCtx.destination);
+
+    // Tenta tocar ao carregar
+    music.play().catch(() => {
+      console.log("O navegador bloqueou autoplay do áudio.");
+      // aqui você pode exibir um botão "Clique para ouvir" se quiser garantir
+    });
+  });
+</script>
+
+
 </body>
 
 </html>

@@ -15,7 +15,7 @@ body {
   /* não repete */
   background-position: center 30%;
   /* ajusta verticalmente */
-  
+
 }
 
 @font-face {
@@ -25,22 +25,34 @@ body {
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'HORROR';
+  src: url('./font/CROWN\ HORROR.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
 .vinheta {
   position: absolute;
-  pointer-events: none; /* não bloqueia cliques nem toques */
+  pointer-events: none;
+  /* não bloqueia cliques nem toques */
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(
-    circle at 25% 65%,        /* foco da luz sobre a Cuca */
-    rgba(0, 0, 0, 0) 5%,     /* centro completamente transparente */
-    rgba(0, 0, 0, 0.75) 25%,  /* escurece rápido */
-    rgba(0, 0, 0, 0.95) 60%,  /* quase preto */
-    rgba(0, 0, 0, 0.95) 80%,     /* preto total */
-    rgba(0, 0, 0, 1) 100%     /* bordas totalmente pretas */
-  );
+  background: radial-gradient(circle at 25% 65%,
+      /* foco da luz sobre a Cuca */
+      rgba(0, 0, 0, 0) 5%,
+      /* centro completamente transparente */
+      rgba(0, 0, 0, 0.75) 25%,
+      /* escurece rápido */
+      rgba(0, 0, 0, 0.95) 60%,
+      /* quase preto */
+      rgba(0, 0, 0, 0.95) 80%,
+      /* preto total */
+      rgba(0, 0, 0, 1) 100%
+      /* bordas totalmente pretas */
+    );
   z-index: 9999;
 }
 
@@ -51,7 +63,7 @@ body {
   height: 100%;
   top: 0px;
   z-index: 0;
-  
+
 }
 
 .game {
@@ -105,7 +117,8 @@ body {
   bottom: -10px;
   z-index: 100000000px;
 }
-#cactus3{
+
+#cactus3 {
   width: 120px;
   height: 120px;
   position: absolute;
@@ -121,34 +134,57 @@ body {
 
 /* Inventário no canto superior direito */
 #inventory {
-  position: fixed;   /* já garante que segue a tela */
-  top: 10px;
-  right: 15px;
+  position: fixed;
+  /* já garante que segue a tela */
+  top: 20px;
+  right: 35px;
   display: flex;
-  gap: 35px;
   padding: 15px;
-  z-index: 99999999; /* muito maior que a vinheta */
+  z-index: 99999999;
+  gap: 50px;
 }
+
+
+#accessibilityIcon {
+  position: fixed;
+  right: 0px;
+  bottom: 100px;
+  width: 50px;
+  height: 50px;
+  background-image: url('./img/acessibilidade.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  z-index: 99999;
+  border-radius: 8px;
+}
+
 
 /* RESPONSIVO */
 @media (max-width: 600px) {
 
-#dino{
-  left: -40px;
-}
-body{
-  width: auto;
-}
+  #dino {
+    left: -40px;
+  }
 
-.vinheta {
-  background: radial-gradient(
-    circle at 35% 55%,        /* foco da luz sobre a Cuca */
-    rgba(0, 0, 0, 0) 5%,     /* centro completamente transparente */
-    rgba(0, 0, 0, 0.65) 25%,  /* escurece rápido */
-    rgba(0, 0, 0, 0.95) 60%,  /* quase preto */
-    rgba(0, 0, 0, 0.95) 80%,     /* preto total */
-    rgba(0, 0, 0, 1) 100%     /* bordas totalmente pretas */
-  );
-  z-index: 9999;
-}
+  body {
+    width: auto;
+  }
+
+  .vinheta {
+    background: radial-gradient(circle at 35% 55%,
+        /* foco da luz sobre a Cuca */
+        rgba(0, 0, 0, 0) 5%,
+        /* centro completamente transparente */
+        rgba(0, 0, 0, 0.65) 25%,
+        /* escurece rápido */
+        rgba(0, 0, 0, 0.95) 60%,
+        /* quase preto */
+        rgba(0, 0, 0, 0.95) 80%,
+        /* preto total */
+        rgba(0, 0, 0, 1) 100%
+        /* bordas totalmente pretas */
+      );
+    z-index: 9999;
+  }
 }

@@ -14,37 +14,53 @@ let gameLoopId;
 let runAnimationId;
 let gameRunning = false; // 🟢 flag para controlar início do jogo
 
-// ------------------- FUNÇÃO DE INÍCIO -------------------
+let accessibilityEnabled = false; // flag global
+const accessibilityIcon = document.getElementById("accessibilityIcon");
+const alertSound = document.getElementById("alertSound");
+
+// Função para ativar/desativar acessibilidade
+accessibilityIcon.addEventListener("click", () => {
+    accessibilityEnabled = !accessibilityEnabled;
+    accessibilityIcon.style.opacity = accessibilityEnabled ? "1" : "0.5"; // feedback visual
+    // opcional: tocar som de confirmação
+    if (accessibilityEnabled) alertSound.play().catch(()=>{});
+});
+
+// Função de tela inicial
 function showStartScreen() {
-   // Criar overlay
-const overlay = document.createElement("div");
-overlay.style.position = "fixed";
-overlay.style.top = "0";
-overlay.style.left = "0";
-overlay.style.width = "100%";
-overlay.style.height = "100%";
-overlay.style.background = "rgba(0,0,0,0.7)";
-overlay.style.display = "flex";
-overlay.style.alignItems = "center";
-overlay.style.justifyContent = "center";
-overlay.style.flexDirection = "column";
-overlay.style.zIndex = "10000";
-document.body.appendChild(overlay);
+    const overlay = document.createElement("div");
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.background = "rgba(0,0,0,0.7)";
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
+    overlay.style.flexDirection = "column";
+    overlay.style.zIndex = "10000";
+    document.body.appendChild(overlay);
 
-// Criar mensagem
-const msg = document.createElement("h1");
-msg.textContent = "Clique na tela ou pressione ESPAÇO para começar";
-msg.style.color = "white";
-msg.style.textAlign = "center";
-msg.style.padding = "20px";
-msg.style.letterSpacing = "4px"; 
-msg.style.fontSize = "70px"
+    const msg = document.createElement("h1");
+    msg.textContent = "Clique na tela ou pressione ESPAÇO para começar";
+    msg.style.color = "white";
+    msg.style.textAlign = "center";
+    msg.style.padding = "20px";
+    msg.style.letterSpacing = "4px"; 
+    msg.style.fontSize = "70px";
+    msg.style.fontFamily = "horroroid, sans-serif"; 
+    overlay.appendChild(msg);
 
-// Aplicar a fonte personalizada
-msg.style.fontFamily = "horroroid, sans-serif"; 
-
-overlay.appendChild(msg);
-
+    const subtitle = document.createElement("p");
+    subtitle.textContent = "Pule os elementos e colete os itens para vencer!";
+    subtitle.style.color = "white";
+    subtitle.style.fontSize = "28px";
+    subtitle.style.marginTop = "-40px";
+    subtitle.style.textAlign = "center";
+    subtitle.style.fontFamily = "HORROR, sans-serif";
+    subtitle.style.letterSpacing = "5px";
+    overlay.appendChild(subtitle);
 
     function startGame() {
         document.removeEventListener("keydown", startListener);
@@ -66,7 +82,6 @@ overlay.appendChild(msg);
     document.addEventListener("keydown", startListener);
     document.addEventListener("touchstart", startTouch);
 }
-
 // ------------------- PULO -------------------
 function jump() {
     if (isJumping) return;
@@ -111,72 +126,107 @@ function runAnimation() {
 
 // ------------------- MOVIMENTO DO CACTO -------------------
 function moveCactus() {
-    const cactus1 = document.getElementById("cactus");
-    const cactus2 = document.getElementById("cactus2");
-    const cactus3 = document.getElementById("cactus3");
+  const cactus1 = document.getElementById("cactus");
+  const cactus2 = document.getElementById("cactus2");
+  const cactus3 = document.getElementById("cactus3");
+  const warningDistance = 30; // distância para avisar o jogador
 
-    let cactus1Position = 800;
-    let cactus2Position = 1300;
-    let speed = 5;
-    let speedIncrease = 0;
+  let cactus1Position = 800;
+  let cactus2Position = 1300;
+  let speed = 5;
+  let speedIncrease = 0;
 
-    cactus1.style.display = "block";
-    cactus2.style.display = "block";
-    cactus3.style.display = "none";
+  cactus1.style.display = "block";
+  cactus2.style.display = "block";
+  cactus3.style.display = "none";
 
-    const isMobile = window.innerWidth <= 600;
-    const hitbox = isMobile
-        ? { leftMin: 90, leftMax: 140, heightMax: 30 }
-        : { leftMin: 50, leftMax: 230, heightMax: 30 };
+  const isMobile = window.innerWidth <= 600;
+  const hitbox = isMobile
+    ? { leftMin: 90, leftMax: 140, heightMax: 30 }
+    : { leftMin: 50, leftMax: 230, heightMax: 30 };
 
-    function resetCactus(which) {
-        const base = 800 + Math.random() * 400;
-        const distance = 250 + Math.random() * 200;
+  // controle para evitar tocar o som muitas vezes seguidas
+  let alertCooldown = false;
 
-        if (which === 1) {
-            cactus1Position = Math.max(base, cactus2Position + distance);
-        } else {
-            cactus2Position = Math.max(base, cactus1Position + distance);
-            const useCactus3 = Math.random() < 0.5;
-            cactus2.style.display = useCactus3 ? "none" : "block";
-            cactus3.style.display = useCactus3 ? "block" : "none";
+  function resetCactus(which) {
+    const base = 800 + Math.random() * 400;
+    const distance = 250 + Math.random() * 200;
 
-            if (useCactus3) cactus3.style.left = cactus2Position + "px";
-        }
+    if (which === 1) {
+      cactus1Position = Math.max(base, cactus2Position + distance);
+    } else {
+      cactus2Position = Math.max(base, cactus1Position + distance);
+      const useCactus3 = Math.random() < 0.5;
+      cactus2.style.display = useCactus3 ? "none" : "block";
+      cactus3.style.display = useCactus3 ? "block" : "none";
+      if (useCactus3) cactus3.style.left = cactus2Position + "px";
+    }
+  }
+
+  function playAlertIfClose() {
+    if (!accessibilityEnabled || alertCooldown) return;
+
+    const dinoLeft = dino.offsetLeft;
+    const dinoRight = dinoLeft + dino.offsetWidth;
+
+    const cactiPositions = [
+      { el: cactus1, pos: cactus1Position },
+      { el: cactus2, pos: cactus2Position },
+      { el: cactus3, pos: cactus2Position },
+    ];
+
+    for (const cactus of cactiPositions) {
+      if (
+        cactus.el.style.display !== "none" &&
+        cactus.pos < dinoRight + warningDistance &&
+        cactus.pos > dinoRight
+      ) {
+        alertSound.currentTime = 0; // reinicia o som
+        alertSound.play().catch(() => {});
+        alertCooldown = true;
+        setTimeout(() => (alertCooldown = false), 1000); // evita spam
+        break;
+      }
+    }
+  }
+
+  function update() {
+    if (!gameRunning) return;
+
+    cactus1Position -= speed;
+    cactus2Position -= speed;
+
+    cactus1.style.left = cactus1Position + "px";
+    cactus2.style.left = cactus2Position + "px";
+    cactus3.style.left = cactus2Position + "px";
+
+    // 🔊 toca o som se o Dino estiver perto do obstáculo
+    playAlertIfClose();
+
+    // colisão
+    if (
+      (cactus1Position > hitbox.leftMin && cactus1Position < hitbox.leftMax && position < hitbox.heightMax) ||
+      (cactus2Position > hitbox.leftMin && cactus2Position < hitbox.leftMax && position < hitbox.heightMax && cactus2.style.display === "block") ||
+      (cactus2Position > hitbox.leftMin && cactus2Position < hitbox.leftMax && position < hitbox.heightMax && cactus3.style.display === "block")
+    ) {
+      endGame();
+      return;
     }
 
-    function update() {
-        if (!gameRunning) return;
+    if (cactus1Position < -100) resetCactus(1);
+    if (cactus2Position < -100) resetCactus(2);
 
-        cactus1Position -= speed;
-        cactus2Position -= speed;
-
-        cactus1.style.left = cactus1Position + "px";
-        cactus2.style.left = cactus2Position + "px";
-        cactus3.style.left = cactus2Position + "px";
-
-        if (
-            (cactus1Position > hitbox.leftMin && cactus1Position < hitbox.leftMax && position < hitbox.heightMax) ||
-            (cactus2Position > hitbox.leftMin && cactus2Position < hitbox.leftMax && position < hitbox.heightMax && cactus2.style.display === "block") ||
-            (cactus2Position > hitbox.leftMin && cactus2Position < hitbox.leftMax && position < hitbox.heightMax && cactus3.style.display === "block")
-        ) {
-            endGame();
-            return;
-        }
-
-        if (cactus1Position < -100) resetCactus(1);
-        if (cactus2Position < -100) resetCactus(2);
-
-        if (speedIncrease < 800) {
-            speedIncrease++;
-            speed = 5 + speedIncrease * 0.005;
-        }
-
-        requestAnimationFrame(update);
+    if (speedIncrease < 800) {
+      speedIncrease++;
+      speed = 5 + speedIncrease * 0.005;
     }
 
-    update();
+    requestAnimationFrame(update);
+  }
+
+  update();
 }
+
 
 // ------------------- GAME OVER -------------------
 function endGame() {
@@ -206,6 +256,8 @@ msg.style.fontSize = "70px"
 
 // Aplicar a fonte personalizada
 msg.style.fontFamily = "horroroid, sans-serif"; 
+
+
 
     const arrow = document.createElement("div");
     arrow.innerHTML = "&#8592;";
@@ -327,8 +379,10 @@ function updateInventory() {
             countBadge.style.color = "white";
             countBadge.style.textShadow = "1px 1px 2px black";
             countBadge.style.fontSize = "20px";
-            countBadge.style.padding = "6px";
+            countBadge.style.padding = "15px";
             countBadge.style.borderRadius = "10px";
+            
+            
 
             container.appendChild(img);
             container.appendChild(countBadge);
