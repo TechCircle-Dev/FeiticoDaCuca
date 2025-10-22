@@ -7,11 +7,10 @@
     <title>O Feitiço da Cuca</title>
     <link rel="icon" href="./img/perfil.png" type="image/png">
     <link rel="stylesheet" href="estilo_parabens.css">
-
 </head>
 
 <body>
-    <svg width="800" height="550" viewBox="0 -100 820 520">
+    <svg width="800" height="550" viewBox="0 -100 820 520" role="img" aria-label="Mensagem de vitória escrita em neon: You Win">
         <defs>
             <path id="curveFeliz" d="M0,0 0,0 800,0 600,0" />
         </defs>
@@ -23,35 +22,33 @@
         </text>
     </svg>
 
-
-
-
-    <img class="caldeirao" src="./img/caldeirao2.png">
-    <img class="cuca" src="./img/cuca_mal.png">
-    <a href="index.html" class="voltar">
+    <img class="caldeirao" src="./img/caldeirao2.png" alt="Caldeirão borbulhante com efeito mágico">
+    <img class="cuca" src="./img/cuca_mal.png" alt="Cuca com expressão maléfica">
+    
+    <a href="index.html" class="voltar" aria-label="Botão para jogar novamente">
         <span class="texto_voltar">Jogar novamente?</span>
     </a>
-    <div class="vinheta"></div>
 
-     <audio id="bgMusic" src="./audio/bruxa.mp3" loop></audio>
+    <div class="vinheta" aria-hidden="true"></div>
 
- <script>
-  window.addEventListener("load", () => {
-    const music = document.getElementById("bgMusic");
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const track = audioCtx.createMediaElementSource(music);
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.value = 4;
-    track.connect(gainNode).connect(audioCtx.destination);
+    <audio id="bgMusic" src="./audio/bruxa.mp3" loop aria-label="Música ambiente com som de risada de bruxas"></audio>
 
-    // Tenta tocar ao carregar
-    music.play().catch(() => {
-      console.log("O navegador bloqueou autoplay do áudio.");
-      // aqui você pode exibir um botão "Clique para ouvir" se quiser garantir
-    });
-  });
-</script>
+    <script>
+        window.addEventListener("load", () => {
+            const music = document.getElementById("bgMusic");
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const track = audioCtx.createMediaElementSource(music);
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.value = 4;
+            track.connect(gainNode).connect(audioCtx.destination);
 
+            // Tenta tocar ao carregar
+            music.play().catch(() => {
+                console.log("O navegador bloqueou autoplay do áudio.");
+                // aqui você pode exibir um botão "Clique para ouvir" se quiser garantir
+            });
+        });
+    </script>
 
 </body>
 

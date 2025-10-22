@@ -10,28 +10,31 @@
 </head>
 
 <body>
-  <div id="accessibilityIcon"></div>
-  <audio id="alertSound" src="./audio/som.mp3"></audio>
+  <div id="accessibilityIcon" aria-label="Ícone de acessibilidade"></div>
 
-  <div id="inventory"></div>
+  <audio id="alertSound" src="./audio/som.mp3" aria-label="Som de alerta"></audio>
 
-  <div class="game">
+  <div id="inventory" aria-label="Inventário do jogo"></div>
 
-    <div id="dino">
-      <img id="foot" src="./img/pe.png" />
+  <div class="game" role="region" aria-label="Área principal do jogo">
+
+    <div id="dino" aria-label="Personagem principal cuca">
+      <img id="foot" src="./img/pe.png">
     </div>
-    <img id="cactus" src="./img/rip.png">
-    <img id="cactus2" src="./img/abo.png">
-    <img id="cactus3" src="./img/mato.png">
+
+    <img id="cactus" src="./img/rip.png" alt="Obstáculo em forma de lápide">
+    <img id="cactus2" src="./img/abo.png" alt="Obstáculo em forma de abóbora">
+    <img id="cactus3" src="./img/mato.png" alt="Obstáculo em forma de moita">
 
   </div>
-  <img class="chao" src="./img/chaoo.png">
 
-  <div class="vinheta"></div>
+  <img class="chao" src="./img/chaoo.png" alt="Imagem do chão do cenário">
 
+  <div class="vinheta" aria-hidden="true"></div>
 
   <script src="script.js"></script>
-  <audio id="bgMusic" src="./audio/audio.mp3" loop></audio>
+
+  <audio id="bgMusic" src="./audio/audio.mp3" loop aria-label="Música de fundo"></audio>
 
   <script>
     const music = document.getElementById("bgMusic");
@@ -52,8 +55,6 @@
     document.body.addEventListener("keydown", startGame, { once: true });
     document.body.addEventListener("touchstart", startGame, { once: true });
   </script>
-
-
 
 </body>
 
